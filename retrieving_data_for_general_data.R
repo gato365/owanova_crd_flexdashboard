@@ -46,22 +46,7 @@ gather_data_web = function(imp_links,num_years){
 }
 
 
-names_seasons = paste0('season_',1:15)
-lj_lst = map(lj_links,get_df)
 
-## Change Names of element of list to be season
-names(lj_lst) = names_seasons
-
-
-## Colnames Vectore
-app_cn_vec = c("Rk","G","Date","Age","Tm","Game_Location","Opp","Game_Outcome",     
-  "GS","MP","FG","FGA","FG_Percent","3P","3PA","3P_Percent",   
-  "FT","FTA","FT_Percent","ORB","DRB","TRB","AST","STL",   
-  "BLK","TOV","PF","PTS","GmSc","Plus_Minus","Season")
-
-## Place a column in each data frame that correspond to name
-lj_lst = map2(lj_lst, names_seasons, ~.x %>% mutate(Season = .y))
-lj_data = bind_rows(lj_lst)
 
 
 
@@ -83,7 +68,7 @@ mj_years = 1985:2003
 mj_years = mj_years[ !mj_years %in% c(1994,1999,2000,2001)]
 
 info_mj  = paste("http://www.basketball-reference.com/players/j/jordami01/gamelog/")
-mj_links = paste(rep(info_mj,num_years),1985:2003,"/",sep="")
+mj_links = paste(rep(info_mj,num_years),mj_years,"/",sep="")
 
 
 
@@ -105,10 +90,54 @@ lj_links = paste(rep(info_lj,num_years),seq(lj_begin_year,lj_begin_year+(num_yea
 
 
 
+##--------------------
+## Step 2a: Get LeBron James Data
+##--------------------
+
+gather_data_web <- function(imp_links,player_initial){
+  ## Gathering Data Using Functions
+  lst = map(imp_links,get_df)
+  
+  ## Change Names of element of list to be season
+  names(lst) = paste0('season_',1:15)
+  
+  
+  ## Change column names vector
+  app_cn_vec = c("Rk","G","Date","Age","Tm",
+                 "Game_Location","Opp","Game_Outcome",     
+                 "GS","MP","FG","FGA","FG_Percent","3P",
+                 "3PA","3P_Percent","FT","FTA","FT_Percent",
+                 "ORB","DRB","TRB","AST","STL","BLK","TOV",
+                 "PF","PTS","GmSc","Plus_Minus")
+  lst <- lapply(lst, setNames, app_cn_vec)
+  
+  
+  ## Place a column in each data frame that correspond to name
+  lst = map2(lst, names_seasons, ~.x %>% mutate(Season = .y))
+  ## Turn list into 1 data frame
+  df = bind_rows(lst) %>% 
+    mutate(Player_Name = player_initial)
+  
+  return(df)
+}
+
+
+
+
+##--------------------
+## Step 2b: Get Michael Jordan Data
+##--------------------
 
 ## Gathering Data Using Functions
-mj_data = gather_data_web(mj_links,num_years)
-lj_data = gather_data_web(lj_links,num_years)
+mj_lst = map(mj_links,get_df)
+
+
+
+
+
+
+mj_data = gather_data_web(mj_links,'MJ')
+lj_data = gather_data_web(lj_links,'LJ')
 
 ## First 4 years of data for Kobe
 kb_data = gather_data_web(kb_links,4)
