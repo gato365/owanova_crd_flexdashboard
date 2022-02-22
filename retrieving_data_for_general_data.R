@@ -46,6 +46,22 @@ gather_data_web = function(imp_links,num_years){
 }
 
 
+names_seasons = paste0('season_',1:15)
+lj_lst = map(lj_links,get_df)
+
+## Change Names of element of list to be season
+names(lj_lst) = names_seasons
+
+
+## Colnames Vectore
+app_cn_vec = c("Rk","G","Date","Age","Tm","Game_Location","Opp","Game_Outcome",     
+  "GS","MP","FG","FGA","FG_Percent","3P","3PA","3P_Percent",   
+  "FT","FTA","FT_Percent","ORB","DRB","TRB","AST","STL",   
+  "BLK","TOV","PF","PTS","GmSc","Plus_Minus","Season")
+
+## Place a column in each data frame that correspond to name
+lj_lst = map2(lj_lst, names_seasons, ~.x %>% mutate(Season = .y))
+lj_data = bind_rows(lj_lst)
 
 
 
@@ -63,9 +79,11 @@ kb_begin_year =  1997;
 num_years = 15
 
 ## Create a list of urls for each player
+mj_years = 1985:2003
+mj_years = mj_years[ !mj_years %in% c(1994,1999,2000,2001)]
 
 info_mj  = paste("http://www.basketball-reference.com/players/j/jordami01/gamelog/")
-mj_links = paste(rep(info_mj,num_years),c(1984:1993, 1995:1998, 2001:2003)[1:num_years] + 1,"/",sep="")
+mj_links = paste(rep(info_mj,num_years),1985:2003,"/",sep="")
 
 
 
@@ -76,13 +94,6 @@ mj_links = paste(rep(info_mj,num_years),c(1984:1993, 1995:1998, 2001:2003)[1:num
 
 
 ## Removing years at which MJ is not in NBA
-mj_years_no_ply = c(
-  "http://www.basketball-reference.com/players/j/jordami01/gamelog/1994/",
-  "http://www.basketball-reference.com/players/j/jordami01/gamelog/1999/",
-  "http://www.basketball-reference.com/players/j/jordami01/gamelog/2000/",
-  "http://www.basketball-reference.com/players/j/jordami01/gamelog/2001/")
-
-mj_links = mj_links[!(mj_links %in% mj_years_no_ply)]
 
 info_kb = paste("http://www.basketball-reference.com/players/b/bryanko01/gamelog/")
 kb_links = paste(rep(info_kb,num_years),seq(kb_begin_year,kb_begin_year+(num_years-1)),"/",sep="")
@@ -114,6 +125,9 @@ for(i in 1:n_seasons){
 
 colnames(kb_data_new) = colnames(kb_data)
 kb_data = rbind(kb_data,kb_data_new)
+
+
+
 
 
 
