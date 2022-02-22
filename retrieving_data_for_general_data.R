@@ -60,12 +60,20 @@ kb_begin_year =  1997;
 
 
 ## Number of years of Interest
-num_years_mj = 19
 num_years = 15
 
 ## Create a list of urls for each player
+
 info_mj  = paste("http://www.basketball-reference.com/players/j/jordami01/gamelog/")
-mj_links = paste(rep(info_mj,num_years_mj),seq(mj_begin_year,mj_begin_year+(num_years-1)),"/",sep="")
+mj_links = paste(rep(info_mj,num_years),c(1984:1993, 1995:1998, 2001:2003)[1:num_years] + 1,"/",sep="")
+
+
+
+
+
+
+
+
 
 ## Removing years at which MJ is not in NBA
 mj_years_no_ply = c(
