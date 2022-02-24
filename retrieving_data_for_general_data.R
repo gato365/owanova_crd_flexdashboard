@@ -171,13 +171,14 @@ nba = all_df %>%
          TD = ifelse(sum_d == 3,1,0)) %>%
   select(-double_PTS,-double_TRB,-double_AST,
          -double_STL,-double_BLK,-sum_d) %>%
+  rename(Name = name) %>% 
   select(Name,Season,Game_Location, Game_Outcome, Point_Margin,everything())%>%
   mutate(Age_Years = substr(Age,start =1,stop=2),
          Age_Days = substr(Age,start =4,stop = 6))
 
-colnames(nba) = str_replace_all(colnames(nba), '%','_Percent')
 
-setwd("C:/Users/james/OneDrive/Documents/Important_Files/Stat_ed_2018_papers/paper_0_bball_data/0_basketball_data")
-write.csv(nba,"modern_nba_legends_08062019.csv",row.names = F)
+
+
+write.csv(nba,"modern_nba_legends_02242022.csv",row.names = F)
 
 
