@@ -75,6 +75,7 @@ gather_data_web = function(imp_links,pn){
            Game_Location = ifelse(Game_Location == "@","Away","Home"),
            Point_Margin = as.numeric(str_remove_all(string = Game_Outcome,"\\(|\\)|W|L|\\+| "),
            Game_Outcome = ifelse(str_detect(string = Game_Outcome, pattern = "W"),"W","L")
+           
            ))
   full_data$number_game = 1:nrow(full_data)
   return(full_data)
