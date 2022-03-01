@@ -28,7 +28,7 @@ library(shinyWidgets)
 library(ggnewscale)
 library(gt)
 
-bball <- read_excel("./NBA_Legends_Data.xlsx")
+bball <- read.csv("modern_nba_legends_02242022.csv")
 
 bball <- bball %>%
   select(Name, PTS, AST, TRB, STL) %>%
@@ -50,10 +50,10 @@ Context {data-orientation=rows}
 Row {data-height=220}
 -------------------------------------
 
-**Description:**
-Introducing statistical concepts with visualizations is vital for students when they are being introduced to new concepts especially when investigating culturally relevant data. A suite using flexdashboard and R shiny to illustrate the mechanism of ANOVA and Simple Linear Regression will be created during this internship which will be used to teach statistical concepts to high school students.
-\
-\
+<!-- **Description:** -->
+<!-- Introducing statistical concepts with visualizations is vital for students when they are being introduced to new concepts especially when investigating culturally relevant data. A suite using flexdashboard and R shiny to illustrate the mechanism of ANOVA and Simple Linear Regression will be created during this internship which will be used to teach statistical concepts to high school students. -->
+<!-- \ -->
+<!-- \ -->
 **Context - Who is the GOAT?:**
 Many NBA (National Basketball Association) fans like to debate who is the GOAT - Greatest of All Time. Most conversations center around Lebron James vs. Michael Jordan, though there are others that should and will be considered. Kobe Bryant had an unmatched work ethic, won more championships than Lebron, and played his whole career with one team. But what really determines who is the best? Is it number of championships won? Or number of points scored? Or assists dished out? This app will help settle this debate - or at least encourage more conversation. 
    
