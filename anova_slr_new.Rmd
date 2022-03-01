@@ -38,7 +38,7 @@ bball <- bball %>%
          Total_Rebounds = TRB,
          Steals = STL) %>%
   mutate(Name = as.factor(Name)) 
-  
+
 
 levels(bball$Name) <- list(`Kobe Bryant`  = "KB", `Lebron James` = "LJ", `Michael Jordan` = "MJ")
 #got theme from: https://bootswatch.com/
@@ -56,7 +56,7 @@ Row {data-height=220}
 <!-- \ -->
 **Context - Who is the GOAT?:**
 Many NBA (National Basketball Association) fans like to debate who is the GOAT - Greatest of All Time. Most conversations center around Lebron James vs. Michael Jordan, though there are others that should and will be considered. Kobe Bryant had an unmatched work ethic, won more championships than Lebron, and played his whole career with one team. But what really determines who is the best? Is it number of championships won? Or number of points scored? Or assists dished out? This app will help settle this debate - or at least encourage more conversation. 
-   
+
 Row {data-height=350}
 -------------------------------------
 ### Lebron James
@@ -81,12 +81,12 @@ Get Hyped! {data-orientation=rows}
 =====================================     
 **Select "Open in Browser" to watch video**
 ```{r}
-    tags$video(
-        src = "./hypevideo.mp4",
-        type = "video/mp4",
-        width = 1280, height = 800,
-        controls = "controls"
-    )
+tags$video(
+  src = "./hypevideo.mp4",
+  type = "video/mp4",
+  width = 1280, height = 800,
+  controls = "controls"
+)
 ```
 Video source:\
 YouTube. (2016). Michael Jordan | Kobe Bryant | Lebron James - Clash of the Gods ᴴᴰ. YouTube. https://www.youtube.com/watch?v=HHLdPTxuwGY&amp;t=1s. 
@@ -94,7 +94,7 @@ YouTube. (2016). Michael Jordan | Kobe Bryant | Lebron James - Clash of the Gods
 
 Intro to Variance {data-orientation=rows}
 =====================================     
-   
+
 Row {data-height=625}
 -------------------------------------
 We are going to understand the following equation. We have to breakdown this tool into finer chunks.
@@ -130,7 +130,7 @@ $$s =\sqrt{ \frac{1}{(n-1)}\sum_{i=1}^n (x_i - \bar{x})^2}$$
 
 Row {data-height=575}
 -------------------------------------
-   
+
 ### Enter Data to Compute Variance
 ```{r}
 tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: #112446}"))
@@ -160,15 +160,15 @@ bball <- reactive(rbind(kb(), lj(), mj()))
 selectInput("player", label = "Select a Player", choices = c("Michael Jordan", "Lebron James","Kobe Bryant" ))
 selectInput("var", label = "Choose a Variable", choices = c("Points", "Assists", "Total_Rebounds", "Steals"))
 newbball <- reactive({filter(bball(), Name == input$player)  %>%
-     mutate(Points = as.numeric(Points), 
-            Assists = as.numeric(Assists),
-            Total_Rebounds = as.numeric(Total_Rebounds),
-            Steals = as.numeric(Steals),
-            Game_Number = as.numeric(Game_Number)
-            ) 
-  })
+    mutate(Points = as.numeric(Points), 
+           Assists = as.numeric(Assists),
+           Total_Rebounds = as.numeric(Total_Rebounds),
+           Steals = as.numeric(Steals),
+           Game_Number = as.numeric(Game_Number)
+    ) 
+})
 ```   
-    
+
 ### Variance Visual - Horizontal Line is the Mean, Vertical Lines are the Deviations
 
 ```{r}
@@ -179,7 +179,7 @@ index <- reactive({index = as.numeric(row.names(newbball()))})
 mean_var = reactive({
   var <- input$var
   if (var =="Points"){
-   mean(newbball()$Points)
+    mean(newbball()$Points)
   }
   else if (var == "Assists"){
     mean(newbball()$Assists)
@@ -189,56 +189,69 @@ mean_var = reactive({
   }
   else{
     mean(newbball()$Steals)
-    }
+  }
 })
 
 #getting variance for a specific player and variable
 variance_var = reactive({
   var <- input$var
   if (var =="Points"){
-   sd(newbball()$Points)
+    var(newbball()$Points)
   }
   else if (var == "Assists"){
-    sd(newbball()$Assists)
+    var(newbball()$Assists)
   }
   else if (var == "Total_Rebounds"){
-    sd(newbball()$Total_Rebounds)
+    var(newbball()$Total_Rebounds)
   }
   else{
-    sd(newbball()$Steals)
-    }
+    var(newbball()$Steals)
+  }
 })
 
 #changing the line colors based on player
 color_lines = reactive({
   player <- input$player
   if (player == "Kobe Bryant"){
-   "purple"
+    "purple"
   }
   else{
     "red"
-    }
+  }
 })
 
 #changing the main line color based on player
 color_main = reactive({
   player <- input$player
   if (player == "Michael Jordan"){
-   "gray8"
+    "gray8"
   }
   else{
     "goldenrod1"
-    }
+  }
 })
 
 renderPlot({
-ggplot(newbball(), aes_string(x = "Game_Number" , y = input$var)) + geom_point() + labs(x = "Game Number") + stat_summary(fun.y = mean, aes(x = 1, yintercept =..y.. ), geom = "hline", col = color_main(), size = 1.25) + ggtitle(paste(input$player, input$var,"- Mean is:", round(mean_var(), 2), ", Standard Deviation is:", round(variance_var(), 2) )) + theme_bw() + geom_segment(aes_string(x = "Game_Number", xend = "Game_Number", y = input$var, yend = mean_var()), colour = color_lines())
+  ggplot(newbball(), aes_string(x = "Game_Number" , y = input$var)) +
+    geom_point() +
+    labs(x = "Game Number") +
+    stat_summary(fun.y = mean, aes(x = 1, yintercept =..y.. ), geom = "hline", 
+                 col = color_main(), size = 1.25) +
+    ggtitle(paste(input$player, input$var,
+                  "- Mean is:", round(mean_var(), 2),
+                  ", Variance is:", round(variance_var(), 2) )) +
+    theme_bw() +
+    geom_segment(aes_string(x = "Game_Number", 
+                            xend = "Game_Number", 
+                            y = input$var, 
+                            yend = mean_var()),
+                 colour = color_lines())
 })
 ```
 
 Intro to ANOVA: Sum of Squares {data-orientation=rows}
 =====================================     
-   
+
 Row {data-height=150}
 -------------------------------------
 When discussing variance in terms of groups, there are three types that we want to focus on. These are between group variation, within group variation and total variation. 
@@ -346,7 +359,7 @@ We can get a p-value from this f-statistic, which comes from an f-distribution w
 
 Analysis of Variance {data-orientation=rows}
 =====================================     
-   
+
 Row {data-height=200}
 -------------------------------------
 **Context**\
@@ -355,7 +368,7 @@ To make this comparison, we will use ANOVA. This is a procedure which takes mult
 
 Row {data-height=700}
 -------------------------------------
-   
+
 ### Choosing Variable for ANOVA
 
 ```{r}
@@ -378,34 +391,34 @@ reg_output <- reactive({tidy(lm(bball()[[input$var_anova]] ~ Name, data = bball(
 my_var_anova = reactive({
   var <- input$var_anova
   if (var =="Points"){
-   df <- bball() %>%
-   select(Points, Name)
-   
-   rename(df, Variable = Points)
+    df <- bball() %>%
+      select(Points, Name)
+    
+    rename(df, Variable = Points)
   }
   else if (var == "Assists"){
-   df <- bball() %>%
-   select(Assists, Name)
-   
-   rename(df, Variable = Assists)
+    df <- bball() %>%
+      select(Assists, Name)
+    
+    rename(df, Variable = Assists)
   }
   else if (var == "Total_Rebounds"){
-   df <- bball() %>%
-    select(Total_Rebounds, Name)
-   
-   rename(df, Variable = Total_Rebounds)
+    df <- bball() %>%
+      select(Total_Rebounds, Name)
+    
+    rename(df, Variable = Total_Rebounds)
   }
   else{
-   df <- bball() %>%
-    select(Steals, Name)
-   rename(df, Variable = Steals)
-    }
+    df <- bball() %>%
+      select(Steals, Name)
+    rename(df, Variable = Steals)
+  }
 })
 
 summary_stats <- reactive({
   my_var_anova() %>%
-  group_by(Name) %>%
-  summarize(Games = n(), `Mean` = round(mean(Variable), digits = 2), `Median` = round(median(Variable), digits = 2), `SD` = round(sd(Variable), digits = 2)) %>%
+    group_by(Name) %>%
+    summarize(Games = n(), `Mean` = round(mean(Variable), digits = 2), `Median` = round(median(Variable), digits = 2), `SD` = round(sd(Variable), digits = 2)) %>%
     tibble() %>%
     gt()
 })
@@ -414,11 +427,11 @@ summary_stats <- reactive({
 output_choice <- reactive({
   choice <- input$output
   if (choice == "ANOVA"){
-      anova_output()
+    anova_output()
   }
   else if (choice == "Linear Regression"){
     reg_output()
-    }
+  }
   else {
     summary_stats()
   }
@@ -427,7 +440,7 @@ output_choice <- reactive({
 renderTable(output_choice())
 
 ```   
-    
+
 ### ANOVA
 
 ```{r}
@@ -435,7 +448,7 @@ renderTable(output_choice())
 mean_var_anova = reactive({
   var <- input$var_anova
   if (var =="Points"){
-   mean(bball()$Points)
+    mean(bball()$Points)
   }
   else if (var == "Assists"){
     mean(bball()$Assists)
@@ -445,113 +458,113 @@ mean_var_anova = reactive({
   }
   else{
     mean(bball()$Steals)
-    }
+  }
 })
 
 
 plot1 <-reactive({
-playmean <- input$playmean
-total_mean <- input$total_mean 
-
-if(playmean == TRUE & total_mean == TRUE){
- ggplot(bball(), aes_string(x="Name", y=input$var_anova, color = "Name")) +
-  geom_point() + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color() + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), size = 1.5) + stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype = "dashed") + scale_color_manual(values = c("Overall" = "gray0", "Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"), name = "Legend for Means") 
-}
-else if(playmean == TRUE & total_mean == FALSE){
- ggplot(bball(), aes_string(x="Name", y=input$var_anova, color = "Name")) +
-  geom_point() + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color() + stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype = "dashed") + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"), name = "Legend for Means") 
-}
-
-else if(playmean == FALSE & total_mean == TRUE){
- ggplot(bball(), aes_string(x="Name", y=input$var_anova, color = "Name")) +
-  geom_point() + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color() + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), size = 1.5)  + scale_color_manual(values = c("Overall" = "gray0"), name = "Legend for Means")
-}
-
-else{
- ggplot(bball(), aes_string(x="Name", y=input$var_anova, color = "Name")) +
-  geom_point() + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) 
-}
-
+  playmean <- input$playmean
+  total_mean <- input$total_mean 
+  
+  if(playmean == TRUE & total_mean == TRUE){
+    ggplot(bball(), aes_string(x="Name", y=input$var_anova, color = "Name")) +
+      geom_point() + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color() + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), size = 1.5) + stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype = "dashed") + scale_color_manual(values = c("Overall" = "gray0", "Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"), name = "Legend for Means") 
+  }
+  else if(playmean == TRUE & total_mean == FALSE){
+    ggplot(bball(), aes_string(x="Name", y=input$var_anova, color = "Name")) +
+      geom_point() + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color() + stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype = "dashed") + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"), name = "Legend for Means") 
+  }
+  
+  else if(playmean == FALSE & total_mean == TRUE){
+    ggplot(bball(), aes_string(x="Name", y=input$var_anova, color = "Name")) +
+      geom_point() + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color() + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), size = 1.5)  + scale_color_manual(values = c("Overall" = "gray0"), name = "Legend for Means")
+  }
+  
+  else{
+    ggplot(bball(), aes_string(x="Name", y=input$var_anova, color = "Name")) +
+      geom_point() + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) 
+  }
+  
 })
 
 plot2 <- reactive({
-jitter <- input$jitter
-playmean <- input$playmean
-total_mean <- input$total_mean
-
-if(playmean == TRUE & jitter == TRUE){
-  if(total_mean == TRUE){
+  jitter <- input$jitter
+  playmean <- input$playmean
+  total_mean <- input$total_mean
+  
+  if(playmean == TRUE & jitter == TRUE){
+    if(total_mean == TRUE){
       ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values =    c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() + geom_jitter(width = 0.1, aes(colour = Name)) +
-  scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color() + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), linetype = "longdash", size = 2)  + scale_color_manual(values = c("Overall" = "gray0", "Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"), name = "Legend for Means") +   stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype =  "dashed")
+        scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color() + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), linetype = "longdash", size = 2)  + scale_color_manual(values = c("Overall" = "gray0", "Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"), name = "Legend for Means") +   stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype =  "dashed")
     }
     
-  else{
-          ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values =    c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() + geom_jitter(width = 0.1, aes(colour = Name)) +
- scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color()  + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"), name = "Legend for Means") +   stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype =  "dashed")
+    else{
+      ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values =    c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() + geom_jitter(width = 0.1, aes(colour = Name)) +
+        scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color()  + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"), name = "Legend for Means") +   stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype =  "dashed")
+    }
+    
   }
-
-}
-else if(playmean == TRUE & jitter == FALSE){
-  if(total_mean == TRUE){
-  ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values =    c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +
- scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"))  + new_scale_color() + 
-   geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), linetype = "longdash", size = 2) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + scale_color_manual(values = c("Overall" = "gray0", "Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"), name = "Legend for Means") + stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype =  "dashed")
+  else if(playmean == TRUE & jitter == FALSE){
+    if(total_mean == TRUE){
+      ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values =    c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +
+        scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"))  + new_scale_color() + 
+        geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), linetype = "longdash", size = 2) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + scale_color_manual(values = c("Overall" = "gray0", "Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"), name = "Legend for Means") + stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype =  "dashed")
+    }
+    else{
+      ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values =    c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +
+        stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype =      "dashed") + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color() + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"), name = "Legend for Means") +   stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype =  "dashed")
+    }
   }
-  else{
-  ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values =    c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +
-  stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype =      "dashed") + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color() + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod"), name = "Legend for Means") +   stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype =  "dashed")
-  }
-}
-else if(playmean == FALSE & jitter == TRUE){
-  if(total_mean == TRUE){
-ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() + geom_jitter(width = 0.1, aes(colour = Name)) + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  new_scale_color() + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), linetype = "longdash", size = 2) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + scale_color_manual(values = c("Overall Mean" = "gray0"), name = "Legend for Means") 
-  }
- else{
- ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values =    c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() + geom_jitter(width = 0.1, aes(colour = Name))  + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14))
- }
-}
-else{
-  if(total_mean == TRUE){
-ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values =    c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  new_scale_color()  + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), linetype = "longdash", size = 2) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + scale_color_manual(values = c("Overall Mean" = "gray0"), name = "Legend for Means")
+  else if(playmean == FALSE & jitter == TRUE){
+    if(total_mean == TRUE){
+      ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() + geom_jitter(width = 0.1, aes(colour = Name)) + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  new_scale_color() + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), linetype = "longdash", size = 2) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + scale_color_manual(values = c("Overall Mean" = "gray0"), name = "Legend for Means") 
+    }
+    else{
+      ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values =    c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() + geom_jitter(width = 0.1, aes(colour = Name))  + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14))
+    }
   }
   else{
-   ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values =    c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14))
+    if(total_mean == TRUE){
+      ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values =    c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  new_scale_color()  + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), linetype = "longdash", size = 2) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + scale_color_manual(values = c("Overall Mean" = "gray0"), name = "Legend for Means")
+    }
+    else{
+      ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_boxplot(alpha = 0.4) + scale_fill_manual(values =    c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14))
+    }
   }
-}
 })
 
 plot3 <- reactive({
-playmean <- input$playmean
-total_mean <- input$total_mean 
-
-if(playmean == TRUE & total_mean == TRUE){
-  ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_violin(alpha = 0.4) + scale_fill_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() + stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype = "dashed") + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) +  new_scale_color() + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), size = 1.5)  + scale_color_manual(values = c("Overall Mean" = "gray0"), name = "Legend")
-}
-else if(playmean == TRUE & total_mean == FALSE){
-  ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_violin(alpha = 0.4) + scale_fill_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() + stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype = "dashed") + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14))
-}
-
-else if(playmean == FALSE & total_mean == TRUE){
-ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_violin(alpha = 0.4) + scale_fill_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() + theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color()  + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), size = 1.5) + scale_color_manual(values = c("Overall Mean" = "gray0"), name = "Legend")
-}
-
-else{
-ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_violin(alpha = 0.4) + scale_fill_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) 
-}
-
+  playmean <- input$playmean
+  total_mean <- input$total_mean 
+  
+  if(playmean == TRUE & total_mean == TRUE){
+    ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_violin(alpha = 0.4) + scale_fill_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() + stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype = "dashed") + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) +  new_scale_color() + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), size = 1.5)  + scale_color_manual(values = c("Overall Mean" = "gray0"), name = "Legend")
+  }
+  else if(playmean == TRUE & total_mean == FALSE){
+    ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_violin(alpha = 0.4) + scale_fill_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() + stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin =..y.., color = Name), width = 0.75, size = 1, linetype = "dashed") + scale_color_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14))
+  }
+  
+  else if(playmean == FALSE & total_mean == TRUE){
+    ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_violin(alpha = 0.4) + scale_fill_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() + theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) + new_scale_color()  + geom_line(aes(x = Name, y = mean_var_anova(), group = 1, color = "gray0"), size = 1.5) + scale_color_manual(values = c("Overall Mean" = "gray0"), name = "Legend")
+  }
+  
+  else{
+    ggplot(bball(), aes_string(x="Name", y=input$var_anova, fill = "Name")) + geom_violin(alpha = 0.4) + scale_fill_manual(values = c("Kobe Bryant" = "purple","Michael Jordan"= "red","Lebron James"=" goldenrod")) + theme_bw() +  theme(axis.title = element_text(size = 16), plot.title = element_text(size = 18), axis.text.x = element_text(size = 14), legend.title = element_text(size = 16), legend.text = element_text(size =12), axis.text.y = element_text(size = 14)) 
+  }
+  
 })
 
 graphInput <- reactive({
   switch(input$graph,
-        "Dotplot" = plot1(),
-        "Boxplot" = plot2(),
-        "Violin Plot" = plot3()
-         )
-  })
+         "Dotplot" = plot1(),
+         "Boxplot" = plot2(),
+         "Violin Plot" = plot3()
+  )
+})
 
 renderPlot({
-   graphInput()
-  })
+  graphInput()
+})
 ```
 
 
