@@ -254,10 +254,7 @@ Intro to ANOVA: Sum of Squares {data-orientation=rows}
 
 Row {data-height=150}
 -------------------------------------
-When discussing variance in terms of groups, there are three types that we want to focus on. These are between group variation, within group variation and total variation. 
-We can begin, as with variance, by breaking down each type.
-Note: i is used for each individual observation, and j for each group. For example, $\bar{x}_2$ is the mean of group 2, and $x_{23}$ is the the third observation in group 2. $\bar{Y}$ is the overall mean, across all groups. We use *n* to denote the number of observations in our sample, and *k* to denote the number of groups. 
-The quantity we get at the end is called our Sum of Squares. 
+Variance can be broken down into 3 different sources of variability. These include between group variation, within group variation and total variation. We can begin, as with variance, by breaking down each type. Note: *i* is used for each individual observation, and *j* for each group. For example, $\bar{y}_2$ is the mean of group 2, and $y_{23}$ is the the third observation in group 2. $\bar{Y}$ is the overall mean, across all groups. We use *n* to denote the number of observations in our sample, and *k* to denote the number of groups. The quantity we get at the end is called our Sum of Squares. 
 
 Row {data-height=700}
 -------------------------------------
@@ -275,7 +272,7 @@ Why do we square it? We can take the absolute value but it is common practice to
 
 
 **Sum of Squares Within Groups**
-$$ \sum_{j=1}^k\sum_{i=1}^n (y_{ij} - \bar{y}_j)^2$$
+$$ SSW = \sum_{j=1}^k\sum_{i=1}^n (y_{ij} - \bar{y}_j)^2$$
 Notice we are summing this quantity twice. First, we calculate the squared deviation for each group, which we saw before. Then we are adding all of the squared deviations across all the groups. Notice we only add up to k for our second summation, as we have k groups, while we add up to n in our first summation as we have n observations in each group. 
 
 This gives us the Sum of Squares Within Groups or Sum of Squares Error (SSE).
@@ -289,7 +286,7 @@ Notice this deviation is a bit different, as it is the deviation of the group me
 **The Squared Deviation**
 $$(\bar{y_j} - \bar{Y})^2$$
 **Sum of Squares Between Groups**
-$$\sum_{j=1}^n n_j*(\bar{y_j} - \bar{Y})^2$$
+$$SSB = \sum_{j=1}^n n_j*(\bar{y_j} - \bar{Y})^2$$
 Now notice we multiply by the size of each group ($n_j$). This is to account for some groups not being the same size, so we weight our quantity. We give more weight to bigger groups, and less weight to smaller groups. 
 
 This gives us Sum of Squares Between Groups.
@@ -305,7 +302,7 @@ $$(y_{ij} - \bar{Y})^2$$
 
 
 **Sum of Squares Total**
-$$\sum_{j=1}^k\sum_{i=1}^n(y_{ij} - \bar{Y})^2$$
+$$SST = \sum_{j=1}^k\sum_{i=1}^n(y_{ij} - \bar{Y})^2$$
 Notice we are summing this quantity twice. First, we calculate the squared deviation from the overall mean for each group, similar to what we saw before. Then we are adding all of the squared deviations across all the groups. Notice we only add up to k for our second summation, as we have k groups, while we add up to n in our first summation as we have n observations in each group. 
 
 This gives us the Sum of Squares Total or Sum of Squares Error (SST). Note that Sum of Squares Between + Sum of Squares Within  = Sum of Squares Total.
@@ -327,15 +324,20 @@ Degrees of freedom can be understood most simply by example. Let's say we have a
 
 Keeping that example in mind, here are the formulas for degrees of freedom. Remember that *n* is our total sample size, and *k* is our number of groups. 
 
-Between degrees of freedom (df): *k-1*\
-Within degrees of freedom (df): *n-k*\
-Total degrees of freedom (df): *n-1*
+Between degrees of freedom $df_{B} = k - 1$\
+Within degrees of freedom $df_{W} = n - k$\
+Total degrees of freedom $df_{T} = n - 1$
 
 Notice that\
-Between df + Within df = \
-*k-1 + n- k * =\
-*n-1* = \
-Total df
+
+$$
+\begin{aligned}
+ df_{T} &= df_{B} + df_{W} \\
+        &= k - 1 + n - k   \\
+        &= n - 1         \\
+\end{aligned}
+$$
+
 
 
 ### Mean Square
