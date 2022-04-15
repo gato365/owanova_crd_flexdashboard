@@ -31,15 +31,20 @@ The first pane explains degrees of freedom in each source of variability and inc
 The final tab allows students to visualize and analyze One-Way ANOVA regarding all three players and one variable. Students can select the variable to compare among the three players and view the data using the following visualizations: vertical boxplots, vertical dot plots, or vertical violin plots. The class should be reminded of the null hypothesis of One-Way ANOVA, which is that the population mean of the selected statistic is the same across all three players, with the same sample size chosen within the ‘Intro to Variance’ tab being used
 
 ## 2. Important Files
+A. Data Extraction from Sports Reference and Cleaning - 'retrieving_data_for_general_data.R'
 
-### A. Data Extraction
-'retrieving_data_for_general_data.R'
+B. Actual R Shiny Flexdashboard - 'anova_slr_new.Rmd'
 
-### B. Actual R Shiny Flexdashboard
-'anova_slr_new.Rmd'
+C. Data from Sports Reference - 'modern_nba_legends_02242022.csv'
 
-### C. Data from Sports Reference
-'modern_nba_legends_02242022.csv'
+
+# 3. Reference
+
+Sports Reference LLC. Pro-Basketball-Reference.com - Pro Basketball Statistics and History. https://www.pro-football-reference.com/. (March 2021)
+Wickham, H. (2017c), The tidy tools manifesto [online]. Retrieved from https://cran.r- project.org/web/packages/tidyverse/vignettes/manifesto.html. 				
+Wickham, H. (2017), “tidyverse: Easily Install and Load 'Tidyverse' Packages.” R package version 1.1.1. https://CRAN.R-project.org/package=tidyverse. 
+Wickham, H., & Wickham, M. H. (2016). Package ‘rvest’. URL: https://cran. r-project. org/web/packages/rvest/rvest. pdf, p156.
+
 
 
 
