@@ -1,6 +1,8 @@
 # One-Way ANOVA CRD Flexdashboard
-Website
+Website:
+
 Purpose:
+This paper provides introductory statistics instructors the capacity to use engaging NBA data within a R Shiny within a flexdashboard to either strengthen students' understanding or introduce the concept of variance and One-Way ANOVA. Using engaging data within the classroom provides context to data that students deem applicable to their lives. 
 
 
 ## 1. How to Use R Shiny
@@ -41,8 +43,11 @@ C. Data from Sports Reference - 'modern_nba_legends_02242022.csv'
 # 3. Reference
 
 Sports Reference LLC. Pro-Basketball-Reference.com - Pro Basketball Statistics and History. https://www.pro-football-reference.com/. (March 2021)
+
 Wickham, H. (2017c), The tidy tools manifesto [online]. Retrieved from https://cran.r- project.org/web/packages/tidyverse/vignettes/manifesto.html. 				
+
 Wickham, H. (2017), “tidyverse: Easily Install and Load 'Tidyverse' Packages.” R package version 1.1.1. https://CRAN.R-project.org/package=tidyverse. 
+
 Wickham, H., & Wickham, M. H. (2016). Package ‘rvest’. URL: https://cran. r-project. org/web/packages/rvest/rvest. pdf, p156.
 
 
