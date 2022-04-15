@@ -1,7 +1,8 @@
 # One-Way ANOVA CRD Flexdashboard
-Website:
+## Website: 
+https://gato365.shinyapps.io/one_way_ANOVA_flex/
 
-Purpose:
+## Purpose:
 This paper provides introductory statistics instructors the capacity to use engaging NBA data within a R Shiny within a flexdashboard to either strengthen students' understanding or introduce the concept of variance and One-Way ANOVA. Using engaging data within the classroom provides context to data that students deem applicable to their lives. 
 
 
