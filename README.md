@@ -40,7 +40,7 @@ B. Actual R Shiny Flexdashboard - 'anova_slr_new.Rmd'
 C. Data from Sports Reference - 'modern_nba_legends_02242022.csv'
 
 
-# 3. Reference
+## 3. Reference
 
 Sports Reference LLC. Pro-Basketball-Reference.com - Pro Basketball Statistics and History. https://www.pro-football-reference.com/. (March 2021)
 
